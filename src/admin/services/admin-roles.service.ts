@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
@@ -32,10 +36,10 @@ export class AdminRolesService {
       },
     });
 
-    return roles.map(role => ({
+    return roles.map((role) => ({
       ...role,
       userCount: role._count.users,
-      permissions: role.rolePermissions.map(rp => rp.permissions),
+      permissions: role.rolePermissions.map((rp) => rp.permissions),
     }));
   }
 
@@ -68,12 +72,16 @@ export class AdminRolesService {
 
     return {
       ...role,
-      permissions: role.rolePermissions.map(rp => rp.permissions),
-      users: role.users.map(ur => ur.user),
+      permissions: role.rolePermissions.map((rp) => rp.permissions),
+      users: role.users.map((ur) => ur.user),
     };
   }
 
-  async createRole(data: { name: string; description?: string; permissions?: string[] }) {
+  async createRole(data: {
+    name: string;
+    description?: string;
+    permissions?: string[];
+  }) {
     const { name, description, permissions = [] } = data;
 
     // Check if role already exists
@@ -90,11 +98,14 @@ export class AdminRolesService {
         name,
         description,
         rolePermissions: {
-          create: permissions.map(permissionName => ({
+          create: permissions.map((permissionName) => ({
             permissions: {
               connectOrCreate: {
                 where: { name: permissionName },
-                create: { name: permissionName, description: `${permissionName} permission` },
+                create: {
+                  name: permissionName,
+                  description: `${permissionName} permission`,
+                },
               },
             },
           })),
@@ -111,11 +122,14 @@ export class AdminRolesService {
 
     return {
       ...role,
-      permissions: role.rolePermissions.map(rp => rp.permissions),
+      permissions: role.rolePermissions.map((rp) => rp.permissions),
     };
   }
 
-  async updateRole(id: string, data: { name?: string; description?: string; permissions?: string[] }) {
+  async updateRole(
+    id: string,
+    data: { name?: string; description?: string; permissions?: string[] },
+  ) {
     const { name, description, permissions } = data;
 
     const existingRole = await this.prisma.role.findUnique({
@@ -145,11 +159,14 @@ export class AdminRolesService {
         ...(permissions && {
           rolePermissions: {
             deleteMany: {},
-            create: permissions.map(permissionName => ({
+            create: permissions.map((permissionName) => ({
               permissions: {
                 connectOrCreate: {
                   where: { name: permissionName },
-                  create: { name: permissionName, description: `${permissionName} permission` },
+                  create: {
+                    name: permissionName,
+                    description: `${permissionName} permission`,
+                  },
                 },
               },
             })),
@@ -167,7 +184,7 @@ export class AdminRolesService {
 
     return {
       ...updatedRole,
-      permissions: updatedRole.rolePermissions.map(rp => rp.permissions),
+      permissions: updatedRole.rolePermissions.map((rp) => rp.permissions),
     };
   }
 
@@ -184,7 +201,9 @@ export class AdminRolesService {
     }
 
     if (role.users.length > 0) {
-      throw new ConflictException('Cannot delete role that is assigned to users');
+      throw new ConflictException(
+        'Cannot delete role that is assigned to users',
+      );
     }
 
     await this.prisma.role.delete({
@@ -209,7 +228,7 @@ export class AdminRolesService {
       },
     });
 
-    return permissions.map(permission => ({
+    return permissions.map((permission) => ({
       ...permission,
       roleCount: permission._count.rolePermissions,
     }));

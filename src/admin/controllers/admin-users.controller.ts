@@ -22,7 +22,11 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { AdminUsersService } from '../services/admin-users.service';
-import { CreateAdminUserDto, UpdateAdminUserDto, AdminUserQueryDto } from '../dto/admin-user.dto';
+import {
+  CreateAdminUserDto,
+  UpdateAdminUserDto,
+  AdminUserQueryDto,
+} from '../dto/admin-user.dto';
 
 @ApiTags('Admin - Users')
 @ApiBearerAuth('JWT-auth')
@@ -41,7 +45,11 @@ export class AdminUsersController {
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiQuery({ name: 'search', required: false, type: String })
-  @ApiQuery({ name: 'status', required: false, enum: ['ACTIVE', 'INACTIVE', 'BLOCKED', 'PENDING'] })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    enum: ['ACTIVE', 'INACTIVE', 'BLOCKED', 'PENDING'],
+  })
   @ApiQuery({ name: 'role', required: false, type: String })
   @ApiQuery({ name: 'sortBy', required: false, type: String })
   @ApiQuery({ name: 'sortOrder', required: false, enum: ['asc', 'desc'] })

@@ -43,7 +43,7 @@ export class AuthService {
   private getCookieConfig(maxAge?: number): CookieOptions {
     const isProduction = this.configService.get('NODE_ENV') === 'production';
     const cookieDomain = this.configService.get<string>('COOKIE_DOMAIN');
-    
+
     return {
       httpOnly: true,
       secure: isProduction,
@@ -57,15 +57,17 @@ export class AuthService {
    * Get app client URL from config
    */
   private getAppClientUrl(): string {
-    return this.configService.get<string>('APP_CLIENT_URL') || 
-           this.configService.get<string>('FRONTEND_URL') || 
-           'http://localhost:3000';
+    return (
+      this.configService.get<string>('APP_CLIENT_URL') ||
+      this.configService.get<string>('FRONTEND_URL') ||
+      'http://localhost:3000'
+    );
   }
 
   async signUp(dto: CreateUserDto) {
     // Check if user exists first
     const existUser = await this.prisma.user.findUnique({
-      where: { email: dto.email  },
+      where: { email: dto.email },
     });
 
     if (existUser) {
@@ -560,8 +562,16 @@ export class AuthService {
     await this.logLoginAttempt(user.id, req, 'SUCCESS');
     const accessToken = await this.generateTokens(user.id, user.status);
     const refreshToken = await this.generateRefreshToken(user.id, user.status);
-    res.cookie('refreshToken', refreshToken, this.getCookieConfig(7 * 24 * 60 * 60 * 1000));
-    res.cookie('accessToken', accessToken, this.getCookieConfig(24 * 60 * 60 * 1000));
+    res.cookie(
+      'refreshToken',
+      refreshToken,
+      this.getCookieConfig(7 * 24 * 60 * 60 * 1000),
+    );
+    res.cookie(
+      'accessToken',
+      accessToken,
+      this.getCookieConfig(24 * 60 * 60 * 1000),
+    );
 
     await this.prisma.user.update({
       where: { id: user.id },
@@ -640,8 +650,16 @@ export class AuthService {
     const accessToken = await this.generateTokens(user.id, user.status);
 
     const refreshToken = await this.generateRefreshToken(user.id, user.status);
-    res.cookie('refreshToken', refreshToken, this.getCookieConfig(7 * 24 * 60 * 60 * 1000));
-    res.cookie('accessToken', accessToken, this.getCookieConfig(24 * 60 * 60 * 1000));
+    res.cookie(
+      'refreshToken',
+      refreshToken,
+      this.getCookieConfig(7 * 24 * 60 * 60 * 1000),
+    );
+    res.cookie(
+      'accessToken',
+      accessToken,
+      this.getCookieConfig(24 * 60 * 60 * 1000),
+    );
 
     await this.logLoginAttempt(user.id, req, 'SUCCESS');
 
@@ -904,8 +922,16 @@ export class AuthService {
         user.status,
       );
 
-      res.cookie('refreshToken', refreshToken, this.getCookieConfig(7 * 24 * 60 * 60 * 1000));
-      res.cookie('accessToken', accessToken, this.getCookieConfig(24 * 60 * 60 * 1000));
+      res.cookie(
+        'refreshToken',
+        refreshToken,
+        this.getCookieConfig(7 * 24 * 60 * 60 * 1000),
+      );
+      res.cookie(
+        'accessToken',
+        accessToken,
+        this.getCookieConfig(24 * 60 * 60 * 1000),
+      );
 
       return {
         status: true,
@@ -1021,8 +1047,16 @@ export class AuthService {
     //refreshToken
     const refreshToken = await this.generateRefreshToken(user.id, user.status);
 
-    res.cookie('refreshToken', refreshToken, this.getCookieConfig(7 * 24 * 60 * 60 * 1000));
-    res.cookie('accessToken', accessToken, this.getCookieConfig(24 * 60 * 60 * 1000));
+    res.cookie(
+      'refreshToken',
+      refreshToken,
+      this.getCookieConfig(7 * 24 * 60 * 60 * 1000),
+    );
+    res.cookie(
+      'accessToken',
+      accessToken,
+      this.getCookieConfig(24 * 60 * 60 * 1000),
+    );
 
     await this.logLoginAttempt(user.id, req, 'SUCCESS');
 

@@ -13,11 +13,11 @@ export class AdminSystemService {
     try {
       // Test database connection
       await this.prisma.$queryRaw`SELECT 1`;
-      
+
       // Get system info
       const uptime = process.uptime();
       const memoryUsage = process.memoryUsage();
-      
+
       return {
         status: 'healthy',
         uptime: `${Math.floor(uptime / 3600)}h ${Math.floor((uptime % 3600) / 60)}m`,
@@ -41,8 +41,10 @@ export class AdminSystemService {
   async getSystemLogs() {
     // In a real implementation, you would read from log files or a logging service
     return {
-      message: 'System logs would be retrieved from logging service (Pino/Winston)',
-      suggestion: 'Integrate with external logging service like ELK stack or CloudWatch',
+      message:
+        'System logs would be retrieved from logging service (Pino/Winston)',
+      suggestion:
+        'Integrate with external logging service like ELK stack or CloudWatch',
     };
   }
 
@@ -73,7 +75,7 @@ export class AdminSystemService {
     try {
       // Clear application cache (implement based on your cache service)
       // await this.cache.clear();
-      
+
       return {
         message: 'Cache cleared successfully',
         timestamp: new Date().toISOString(),
@@ -89,19 +91,14 @@ export class AdminSystemService {
 
   async getDatabaseStats() {
     try {
-      const [
-        userCount,
-        blogCount,
-        commentCount,
-        roleCount,
-        permissionCount,
-      ] = await Promise.all([
-        this.prisma.user.count(),
-        this.prisma.blog.count(),
-        this.prisma.blogComment.count(),
-        this.prisma.role.count(),
-        this.prisma.permission.count(),
-      ]);
+      const [userCount, blogCount, commentCount, roleCount, permissionCount] =
+        await Promise.all([
+          this.prisma.user.count(),
+          this.prisma.blog.count(),
+          this.prisma.blogComment.count(),
+          this.prisma.role.count(),
+          this.prisma.permission.count(),
+        ]);
 
       // Get database size (PostgreSQL specific)
       const dbSize = await this.prisma.$queryRaw`

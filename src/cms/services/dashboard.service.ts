@@ -41,7 +41,10 @@ export class DashboardService {
   /**
    * Get comprehensive dashboard statistics
    */
-  async getDashboardStats(): Promise<{ status: boolean; data: DashboardStats }> {
+  async getDashboardStats(): Promise<{
+    status: boolean;
+    data: DashboardStats;
+  }> {
     try {
       const [
         totalBlogs,

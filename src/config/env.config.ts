@@ -70,6 +70,15 @@ export const envSchema = z.object({
   // Security
   CORS_ORIGIN: z.string().default('http://localhost:3000'),
   COOKIE_DOMAIN: z.string().optional(),
+
+  // Analytics
+  ANALYTICS_ENABLED: z.string().default('false'),
+  GA_ENABLED: z.string().default('false'),
+  GA_MEASUREMENT_ID: z.string().optional(),
+  GA_API_SECRET: z.string().optional(),
+  FB_PIXEL_ENABLED: z.string().default('false'),
+  FB_PIXEL_ID: z.string().optional(),
+  FB_PIXEL_ACCESS_TOKEN: z.string().optional(),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

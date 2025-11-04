@@ -25,7 +25,7 @@ export class AuditService {
         entity: data.entity,
         entityId: data.entityId,
         ip: data.ip,
-        userAgent: data.userAgent
+        userAgent: data.userAgent,
       };
 
       // Only add changes if it's defined

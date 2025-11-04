@@ -1,10 +1,14 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { AdminService } from './admin.service';
-
 
 @ApiTags('Admin')
 @ApiBearerAuth('JWT-auth')
@@ -28,10 +32,16 @@ export class AdminController {
         availableEndpoints: {
           type: 'array',
           items: { type: 'string' },
-          example: ['/admin/users', '/admin/blogs', '/admin/roles', '/admin/dashboard', '/admin/system']
-        }
-      }
-    }
+          example: [
+            '/admin/users',
+            '/admin/blogs',
+            '/admin/roles',
+            '/admin/dashboard',
+            '/admin/system',
+          ],
+        },
+      },
+    },
   })
   getAdminInfo() {
     return this.adminService.getAdminInfo();

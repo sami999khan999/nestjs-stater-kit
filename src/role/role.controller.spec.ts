@@ -18,9 +18,11 @@ describe('RoleController', () => {
         },
       ],
     })
-    .overrideGuard(AuthGuard('jwt')).useValue({ canActivate: () => true })
-    .overrideGuard(PermissionsGuard).useValue({ canActivate: () => true })
-    .compile();
+      .overrideGuard(AuthGuard('jwt'))
+      .useValue({ canActivate: () => true })
+      .overrideGuard(PermissionsGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<RoleController>(RoleController);
   });

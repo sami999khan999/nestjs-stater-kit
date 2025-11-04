@@ -8,13 +8,13 @@ export const queryBlogSchema = z.object({
     .regex(/^\d+$/, 'Page must be a number')
     .default('1')
     .optional(),
-  
+
   limit: z
     .string()
     .regex(/^\d+$/, 'Limit must be a number')
     .default('10')
     .optional(),
-  
+
   // Sorting
   sortBy: z
     .enum([
@@ -28,31 +28,26 @@ export const queryBlogSchema = z.object({
     ])
     .default('createdAt')
     .optional(),
-  
-  sortOrder: z
-    .enum(['asc', 'desc'])
-    .default('desc')
-    .optional(),
-  
+
+  sortOrder: z.enum(['asc', 'desc']).default('desc').optional(),
+
   // Filters
   search: z.string().optional(), // Search in title, content, excerpt
-  status: z
-    .enum(['DRAFT', 'PUBLISHED', 'SCHEDULED', 'ARCHIVED'])
-    .optional(),
-  
+  status: z.enum(['DRAFT', 'PUBLISHED', 'SCHEDULED', 'ARCHIVED']).optional(),
+
   categoryId: z.string().optional(),
   tagId: z.string().optional(),
   authorId: z.string().optional(),
-  
+
   isFeatured: z
     .string()
     .transform((val) => val === 'true')
     .optional(),
-  
+
   // Date filters
   publishedFrom: z.string().datetime().optional(),
   publishedTo: z.string().datetime().optional(),
-  
+
   // SEO filter
   focusKeyword: z.string().optional(),
 });
@@ -65,7 +60,7 @@ export const adminQueryBlogSchema = queryBlogSchema.extend({
     .string()
     .transform((val) => val === 'true')
     .optional(),
-  
+
   isIndexable: z
     .string()
     .transform((val) => val === 'true')

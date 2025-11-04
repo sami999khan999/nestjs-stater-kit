@@ -85,9 +85,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
     const masked = { ...data };
     for (const key of Object.keys(masked)) {
-      if (
-        sensitiveFields.some((field) => key.toLowerCase().includes(field))
-      ) {
+      if (sensitiveFields.some((field) => key.toLowerCase().includes(field))) {
         masked[key] = '***MASKED***';
       } else if (typeof masked[key] === 'object') {
         masked[key] = this.maskSensitiveData(masked[key]);

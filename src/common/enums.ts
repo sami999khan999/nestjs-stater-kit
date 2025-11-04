@@ -20,12 +20,7 @@ export const ExperienceStatusEnum = z.enum([
   'DELETED',
 ]);
 
-export const FrequencyEnum = z.enum([
-  'DAILY',
-  'WEEKLY',
-  'MONTHLY',
-  'YEARLY',
-]);
+export const FrequencyEnum = z.enum(['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY']);
 export const ScheduleTypeEnum = z.enum(['ONTIME', 'RECURRING', 'CUSTOM']);
 export const DiscountTypeEnum = z.enum(['PERCENTAGE', 'FIXED']);
 export const BookingStatusEnum = z.enum([

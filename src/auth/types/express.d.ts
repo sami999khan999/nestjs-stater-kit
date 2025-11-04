@@ -10,7 +10,7 @@ declare global {
         status: string;
       };
     }
-    
+
     namespace Multer {
       interface File {
         /** Field name specified in the form */

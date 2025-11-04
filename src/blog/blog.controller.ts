@@ -86,7 +86,7 @@ export class BlogController {
   @Get('slug/:slug')
   async findBySlug(@Param('slug') slug: string, @Req() req: Request) {
     const userId = (req.user as any)?.id;
-    const ip = req.ip || req.headers['x-forwarded-for'] as string;
+    const ip = req.ip || (req.headers['x-forwarded-for'] as string);
     return this.blogService.findBySlug(slug, userId, ip);
   }
 

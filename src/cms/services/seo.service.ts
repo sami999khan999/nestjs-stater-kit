@@ -116,13 +116,17 @@ export class SeoService {
       );
     }
     if (contentAnalysis.headingsCount === 0) {
-      recommendations.push('Add heading tags (H2, H3) to structure your content');
+      recommendations.push(
+        'Add heading tags (H2, H3) to structure your content',
+      );
     }
     if (!blog.focusKeyword) {
       recommendations.push('Set a focus keyword for better SEO targeting');
     }
     if (!blog.canonicalUrl) {
-      recommendations.push('Consider adding a canonical URL to avoid duplicate content');
+      recommendations.push(
+        'Consider adding a canonical URL to avoid duplicate content',
+      );
     }
 
     const percentage = Math.round((totalScore / maxScore) * 100);
@@ -168,7 +172,10 @@ export class SeoService {
     }
 
     // Keyword check (10 points)
-    if (focusKeyword && titleToAnalyze.toLowerCase().includes(focusKeyword.toLowerCase())) {
+    if (
+      focusKeyword &&
+      titleToAnalyze.toLowerCase().includes(focusKeyword.toLowerCase())
+    ) {
       score += 10;
     } else if (focusKeyword) {
       issue = issue
@@ -216,7 +223,10 @@ export class SeoService {
     }
 
     // Keyword check (10 points)
-    if (focusKeyword && metaDescription.toLowerCase().includes(focusKeyword.toLowerCase())) {
+    if (
+      focusKeyword &&
+      metaDescription.toLowerCase().includes(focusKeyword.toLowerCase())
+    ) {
       score += 10;
     } else if (focusKeyword) {
       issue = issue
@@ -282,7 +292,9 @@ export class SeoService {
     return {
       wordCount,
       readingTime,
-      keywordDensity: focusKeyword ? Number(keywordDensity.toFixed(2)) : undefined,
+      keywordDensity: focusKeyword
+        ? Number(keywordDensity.toFixed(2))
+        : undefined,
       headingsCount,
       score,
     };
@@ -331,10 +343,17 @@ export class SeoService {
     }
 
     // Keyword in URL (7 points)
-    if (focusKeyword && slug.toLowerCase().includes(focusKeyword.toLowerCase().replace(/\s+/g, '-'))) {
+    if (
+      focusKeyword &&
+      slug
+        .toLowerCase()
+        .includes(focusKeyword.toLowerCase().replace(/\s+/g, '-'))
+    ) {
       score += 7;
     } else if (focusKeyword) {
-      issue = issue ? `${issue}. URL doesn't contain focus keyword` : "URL doesn't contain focus keyword";
+      issue = issue
+        ? `${issue}. URL doesn't contain focus keyword`
+        : "URL doesn't contain focus keyword";
     }
 
     return {
@@ -427,7 +446,9 @@ export class SeoService {
           hasIssues: analysis.overallScore.issues.length > 0,
         });
       } catch (error) {
-        this.logger.error(`Failed to analyze blog ${blog.id}: ${error.message}`);
+        this.logger.error(
+          `Failed to analyze blog ${blog.id}: ${error.message}`,
+        );
       }
     }
 
@@ -436,7 +457,8 @@ export class SeoService {
 
     const summary = {
       total: analyses.length,
-      averageScore: analyses.reduce((sum, a) => sum + a.seoScore, 0) / analyses.length,
+      averageScore:
+        analyses.reduce((sum, a) => sum + a.seoScore, 0) / analyses.length,
       needsImprovement: analyses.filter((a) => a.seoScore < 70).length,
       good: analyses.filter((a) => a.seoScore >= 70 && a.seoScore < 90).length,
       excellent: analyses.filter((a) => a.seoScore >= 90).length,

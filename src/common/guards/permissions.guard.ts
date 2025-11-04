@@ -49,7 +49,8 @@ export class PermissionsGuard implements CanActivate {
         if (!dbUser) return [];
         const set = new Set<string>();
         for (const ur of dbUser.roles) {
-          for (const rp of ur.role.rolePermissions) set.add(rp.permissions.name);
+          for (const rp of ur.role.rolePermissions)
+            set.add(rp.permissions.name);
         }
         return Array.from(set);
       },

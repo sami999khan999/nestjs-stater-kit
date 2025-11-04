@@ -5,7 +5,11 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreateAdminUserDto, UpdateAdminUserDto, AdminUserQueryDto } from '../dto/admin-user.dto';
+import {
+  CreateAdminUserDto,
+  UpdateAdminUserDto,
+  AdminUserQueryDto,
+} from '../dto/admin-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserStatus } from '@prisma/client';
 

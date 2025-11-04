@@ -23,13 +23,12 @@ export class EmailProcessor extends WorkerHost {
       !process.env.SMTP_HOST ||
       !process.env.SMTP_PORT ||
       !process.env.SMTP_USER ||
-      !process.env.SMTP_PASSWORD ||
+      !process.env.SMTP_PASS ||
       !process.env.EMAIL_FROM
     ) {
       this.logger.error('❌ Missing SMTP configuration in .env file');
       throw new Error('Missing SMTP configuration');
     }
-
     // Create transporter
     this.transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -37,12 +36,12 @@ export class EmailProcessor extends WorkerHost {
       secure: parseInt(process.env.SMTP_PORT, 10) === 465,
       auth: {
         user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD,
+        pass: process.env.SMTP_PASS,
       },
     });
 
     // Verify SMTP connection
-    this.transporter.verify((error, success) => {
+    this.transporter.verify((error) => {
       if (error) {
         this.logger.error('❌ SMTP connection failed:', error);
       } else {
@@ -52,7 +51,22 @@ export class EmailProcessor extends WorkerHost {
   }
 
   // Main job handler
-  async process(job: Job<any, any, string>): Promise<any> {
+  async process(
+    job: Job<
+      {
+        name?: string;
+        email?: string;
+        phone?: string;
+        subject?: string;
+        message?: string;
+        to?: string;
+        text?: string;
+        html?: string;
+      },
+      unknown,
+      string
+    >,
+  ): Promise<void> {
     try {
       // Handle contact form emails specially
       if (job.name === 'send-contact-email') {
@@ -93,18 +107,18 @@ ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
 
       // Default handling for other email jobs expects { to, subject, text, html }
       const { to, subject, text, html } = job.data;
-      this.logger.log(`📨 Sending email to ${to} [${job.name}]`);
+      this.logger.log(`📨 Sending email to ${to ?? 'unknown'} [${job.name}]`);
       await this.transporter.sendMail({
         from: process.env.EMAIL_FROM,
-        to,
-        subject,
-        text,
-        html,
+        to: to ?? '',
+        subject: subject ?? 'No Subject',
+        text: text ?? '',
+        html: html ?? '',
       });
-      this.logger.log(`✅ Email successfully sent to ${to}`);
-    } catch (error: any) {
+      this.logger.log(`✅ Email successfully sent to ${to ?? 'unknown'}`);
+    } catch (error: unknown) {
       this.logger.error(
-        `❌ Failed processing job ${job.name}: ${error.message}`,
+        `❌ Failed processing job ${job.name}: ${error instanceof Error ? error.message : String(error)}`,
       );
       throw error;
     }

@@ -17,8 +17,9 @@ describe('NotificationController', () => {
         },
       ],
     })
-    .overrideGuard(AuthGuard('jwt')).useValue({ canActivate: () => true })
-    .compile();
+      .overrideGuard(AuthGuard('jwt'))
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<NotificationController>(NotificationController);
   });

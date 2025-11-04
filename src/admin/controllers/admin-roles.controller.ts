@@ -31,7 +31,10 @@ export class AdminRolesController {
 
   @Get()
   @ApiOperation({ summary: 'Get all roles' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Roles retrieved successfully' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Roles retrieved successfully',
+  })
   async getAllRoles() {
     return this.adminRolesService.getAllRoles();
   }
@@ -45,14 +48,25 @@ export class AdminRolesController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new role' })
-  async createRole(@Body() body: { name: string; description?: string; permissions?: string[] }) {
+  async createRole(
+    @Body()
+    body: {
+      name: string;
+      description?: string;
+      permissions?: string[];
+    },
+  ) {
     return this.adminRolesService.createRole(body);
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Update role' })
   @ApiParam({ name: 'id', type: String })
-  async updateRole(@Param('id') id: string, @Body() body: { name?: string; description?: string; permissions?: string[] }) {
+  async updateRole(
+    @Param('id') id: string,
+    @Body()
+    body: { name?: string; description?: string; permissions?: string[] },
+  ) {
     return this.adminRolesService.updateRole(id, body);
   }
 

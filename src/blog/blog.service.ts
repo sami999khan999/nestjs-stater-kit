@@ -7,14 +7,8 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UploadService } from 'src/upload/upload.service';
-import {
-  CreateBlogDto,
-  createBlogSchema,
-} from './dto/create-blog.dto';
-import {
-  UpdateBlogDto,
-  updateBlogSchema,
-} from './dto/update-blog.dto';
+import { CreateBlogDto, createBlogSchema } from './dto/create-blog.dto';
+import { UpdateBlogDto, updateBlogSchema } from './dto/update-blog.dto';
 import {
   QueryBlogDto,
   queryBlogSchema,
@@ -106,7 +100,11 @@ export class BlogService {
   /**
    * Create a new blog post
    */
-  async create(data: CreateBlogDto, userId: string, file?: Express.Multer.File) {
+  async create(
+    data: CreateBlogDto,
+    userId: string,
+    file?: Express.Multer.File,
+  ) {
     const parsedBody = createBlogSchema.safeParse(data);
 
     if (!parsedBody.success) {
@@ -171,13 +169,14 @@ export class BlogService {
           ? new Date(enrichedData.scheduledFor)
           : null,
         // Connect tags if provided
-        tags: tagIds && tagIds.length > 0
-          ? {
-              create: tagIds.map((tagId) => ({
-                tag: { connect: { id: tagId } },
-              })),
-            }
-          : undefined,
+        tags:
+          tagIds && tagIds.length > 0
+            ? {
+                create: tagIds.map((tagId) => ({
+                  tag: { connect: { id: tagId } },
+                })),
+              }
+            : undefined,
       },
       include: {
         author: {

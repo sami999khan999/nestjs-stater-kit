@@ -17,10 +17,10 @@ import { NOTIFICATION_CHANNEL, redisSub } from 'src/config/redis.config';
 })
 export class NotificationGateway implements OnGatewayConnection, OnGatewayInit {
   private readonly logger = new Logger(NotificationGateway.name);
-  
+
   @WebSocketServer()
   server!: Server;
-  
+
   constructor(private readonly jwtService: JwtService) {}
 
   handleConnection(client: Socket) {
@@ -52,7 +52,7 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayInit {
       try {
         payload = this.jwtService.verify(token);
       } catch (e) {
-        payload = this.jwtService.decode(token) as any;
+        payload = this.jwtService.decode(token);
       }
       if (!payload) return null;
 
@@ -69,7 +69,10 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayInit {
 
     redisSub.subscribe(NOTIFICATION_CHANNEL, (err) => {
       if (err) {
-        this.logger.error(`Redis subscription error: ${err.message}`, err.stack);
+        this.logger.error(
+          `Redis subscription error: ${err.message}`,
+          err.stack,
+        );
       }
     });
 
@@ -77,10 +80,14 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayInit {
       if (channel === NOTIFICATION_CHANNEL) {
         try {
           const data = JSON.parse(message);
-          this.logger.debug(`Broadcasting notification to user: ${data.userId}`);
+          this.logger.debug(
+            `Broadcasting notification to user: ${data.userId}`,
+          );
           this.server.to(data.userId).emit('notification', data);
         } catch (error) {
-          this.logger.error(`Failed to parse notification message: ${error.message}`);
+          this.logger.error(
+            `Failed to parse notification message: ${error.message}`,
+          );
         }
       }
     });

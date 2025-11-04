@@ -5,7 +5,14 @@ import { ConfigService } from '@nestjs/config';
 interface SitemapUrl {
   loc: string;
   lastmod?: string;
-  changefreq?: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
+  changefreq?:
+    | 'always'
+    | 'hourly'
+    | 'daily'
+    | 'weekly'
+    | 'monthly'
+    | 'yearly'
+    | 'never';
   priority?: number;
 }
 
@@ -17,7 +24,8 @@ export class SitemapService {
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
   ) {
-    this.baseUrl = this.configService.get<string>('SITE_URL') || 'https://example.com';
+    this.baseUrl =
+      this.configService.get<string>('SITE_URL') || 'https://example.com';
   }
   private readonly logger = new Logger(SitemapService.name);
 
@@ -148,7 +156,7 @@ ${urlsXML}
    */
   async generateRobotsTxt(): Promise<string> {
     const sitemapUrl = `${this.baseUrl}/sitemap.xml`;
-    
+
     return `# Robots.txt for ${this.baseUrl}
 User-agent: *
 Allow: /
@@ -214,7 +222,8 @@ Sitemap: ${sitemapUrl}
           : new Date().toUTCString();
 
         // Strip HTML for description
-        const description = blog.excerpt || this.stripHTML(blog.content).substring(0, 200);
+        const description =
+          blog.excerpt || this.stripHTML(blog.content).substring(0, 200);
 
         return `
     <item>

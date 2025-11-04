@@ -124,7 +124,8 @@ export class NotificationService {
     const map: Partial<Record<NotificationType, boolean>> = {
       [NotificationType.BOOKING]: settings.newBooking,
       [NotificationType.REVIEW]: settings.newReview,
-      [NotificationType.PAYMENT]: settings.payoutcompleted || settings.payoutintiated,
+      [NotificationType.PAYMENT]:
+        settings.payoutcompleted || settings.payoutintiated,
       [NotificationType.ALERT]: settings.securityalert,
       [NotificationType.SYSTEM]: settings.policychange,
       [NotificationType.COUPON]: settings.promotionaloffer,

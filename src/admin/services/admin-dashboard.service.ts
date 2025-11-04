@@ -19,10 +19,17 @@ export class AdminDashboardService {
       this.prisma.user.count({ where: { deletedAt: null } }),
       this.prisma.user.count({ where: { status: 'ACTIVE', deletedAt: null } }),
       this.prisma.blog.count({ where: { deletedAt: null } }),
-      this.prisma.blog.count({ where: { status: 'PUBLISHED', deletedAt: null } }),
+      this.prisma.blog.count({
+        where: { status: 'PUBLISHED', deletedAt: null },
+      }),
       this.prisma.blogComment.count({ where: { deletedAt: null } }),
-      this.prisma.blogComment.count({ where: { status: 'PENDING', deletedAt: null } }),
-      this.prisma.blog.aggregate({ _sum: { viewCount: true }, where: { deletedAt: null } }),
+      this.prisma.blogComment.count({
+        where: { status: 'PENDING', deletedAt: null },
+      }),
+      this.prisma.blog.aggregate({
+        _sum: { viewCount: true },
+        where: { deletedAt: null },
+      }),
       this.prisma.user.count({
         where: {
           createdAt: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
@@ -109,7 +116,7 @@ export class AdminDashboardService {
 
   async getAnalytics() {
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    
+
     const [userGrowth, blogGrowth, viewsGrowth] = await Promise.all([
       this.prisma.user.groupBy({
         by: ['createdAt'],

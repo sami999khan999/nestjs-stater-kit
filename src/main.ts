@@ -18,7 +18,10 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 8000);
   const nodeEnv = configService.get<string>('NODE_ENV', 'development');
-  const corsOrigin = configService.get<string>('CORS_ORIGIN', 'http://localhost:3000');
+  const corsOrigin = configService.get<string>(
+    'CORS_ORIGIN',
+    'http://localhost:3000',
+  );
 
   // Use Pino logger
   app.useLogger(app.get(Logger));
@@ -81,7 +84,9 @@ async function bootstrap() {
   if (nodeEnv !== 'production') {
     const config = new DocumentBuilder()
       .setTitle('NestJS Starter Kit API')
-      .setDescription('Production-ready NestJS API with authentication, authorization, and best practices')
+      .setDescription(
+        'Production-ready NestJS API with authentication, authorization, and best practices',
+      )
       .setVersion('1.0')
       .addBearerAuth(
         {
@@ -94,7 +99,10 @@ async function bootstrap() {
         },
         'JWT-auth',
       )
-      .addTag('Authentication', 'User authentication and authorization endpoints')
+      .addTag(
+        'Authentication',
+        'User authentication and authorization endpoints',
+      )
       .addTag('Users', 'User management endpoints')
       .addTag('Health', 'Health check endpoints')
       .build();
@@ -106,7 +114,9 @@ async function bootstrap() {
       },
     });
 
-    console.log(`📚 Swagger documentation available at: http://localhost:${port}/api/docs`);
+    console.log(
+      `📚 Swagger documentation available at: http://localhost:${port}/api/docs`,
+    );
   }
 
   // Graceful shutdown

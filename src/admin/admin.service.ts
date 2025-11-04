@@ -9,11 +9,11 @@ export class AdminService {
       timestamp: new Date().toISOString(),
       availableEndpoints: [
         '/admin/users',
-        '/admin/blogs', 
+        '/admin/blogs',
         '/admin/roles',
         '/admin/dashboard',
-        '/admin/system'
-      ]
+        '/admin/system',
+      ],
     };
   }
 }

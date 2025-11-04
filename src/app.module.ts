@@ -14,6 +14,7 @@ import { AllExceptionsFilter } from './common/exceptions/http-exception.filter';
 import { ResponseTransformInterceptor } from './common/interceptors/response-transform.interceptor';
 import { BlogModule } from './blog/blog.module';
 import { AdminModule } from './admin/admin.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 import { BullModule } from '@nestjs/bullmq';
 import { redisConfig } from './config/redis.config';
 import { QUEUES } from './queues/queue.constants';
@@ -32,6 +33,7 @@ import { QUEUES } from './queues/queue.constants';
     BullModule.registerQueue(
       { name: QUEUES.NOTIFICATION },
       { name: QUEUES.EMAIL },
+      { name: QUEUES.ANALYTICS },
     ),
 
     // Pino logger
@@ -51,7 +53,12 @@ import { QUEUES } from './queues/queue.constants';
             : undefined,
         level: process.env.LOG_LEVEL || 'info',
         serializers: {
-          req(req: any) {
+          req(req: {
+            id: string;
+            method: string;
+            url: string;
+            headers: Record<string, string | undefined>;
+          }) {
             return {
               id: req.id,
               method: req.method,
@@ -66,7 +73,7 @@ import { QUEUES } from './queues/queue.constants';
               },
             };
           },
-          res(res: any) {
+          res(res: { statusCode: number }) {
             return {
               statusCode: res.statusCode,
             };
@@ -90,6 +97,7 @@ import { QUEUES } from './queues/queue.constants';
     HealthModule,
     BlogModule,
     AdminModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [

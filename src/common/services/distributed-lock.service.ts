@@ -26,7 +26,7 @@ export class DistributedLockService {
 
     for (let attempt = 0; attempt < retryAttempts; attempt++) {
       const result = await this.redis.set(lockKey, lockValue, 'PX', ttl, 'NX');
-      
+
       if (result === 'OK') {
         this.logger.debug(`Lock acquired: ${lockKey}`);
         return lockValue;
@@ -43,7 +43,7 @@ export class DistributedLockService {
 
   async releaseLock(key: string, lockValue: string): Promise<boolean> {
     const lockKey = `lock:${key}`;
-    
+
     const luaScript = `
       if redis.call("get", KEYS[1]) == ARGV[1] then
         return redis.call("del", KEYS[1])
@@ -54,11 +54,11 @@ export class DistributedLockService {
 
     const result = await this.redis.eval(luaScript, 1, lockKey, lockValue);
     const released = result === 1;
-    
+
     if (released) {
       this.logger.debug(`Lock released: ${lockKey}`);
     }
-    
+
     return released;
   }
 
@@ -68,7 +68,7 @@ export class DistributedLockService {
     ttl: number = 30000,
   ): Promise<T> {
     const lockValue = await this.acquireLock(key, ttl);
-    
+
     if (!lockValue) {
       throw new Error(`Failed to acquire lock for key: ${key}`);
     }
@@ -81,6 +81,6 @@ export class DistributedLockService {
   }
 
   private sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

@@ -7,12 +7,20 @@ export class AdminBlogsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getAllBlogs(query: any) {
-    const { page = 1, limit = 10, search, status, authorId, sortBy = 'createdAt', sortOrder = 'desc' } = query;
-    
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      status,
+      authorId,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+    } = query;
+
     // Convert string values to numbers
     const pageNum = parseInt(page, 10) || 1;
     const limitNum = parseInt(limit, 10) || 10;
-    
+
     const skip = (pageNum - 1) * limitNum;
     const take = limitNum;
 
@@ -62,7 +70,12 @@ export class AdminBlogsService {
 
     return {
       data: blogs,
-      meta: { total, page: pageNum, limit: limitNum, totalPages: Math.ceil(total / limitNum) },
+      meta: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(total / limitNum),
+      },
     };
   }
 
@@ -110,7 +123,8 @@ export class AdminBlogsService {
       where: { id },
       data: {
         status: status as BlogStatus,
-        ...(status === 'PUBLISHED' && !blog.publishedAt && { publishedAt: new Date() }),
+        ...(status === 'PUBLISHED' &&
+          !blog.publishedAt && { publishedAt: new Date() }),
       },
       select: {
         id: true,
@@ -141,13 +155,22 @@ export class AdminBlogsService {
   }
 
   async getBlogAnalytics() {
-    const [totalBlogs, publishedBlogs, draftBlogs, totalViews, totalComments] = await Promise.all([
-      this.prisma.blog.count({ where: { deletedAt: null } }),
-      this.prisma.blog.count({ where: { status: 'PUBLISHED', deletedAt: null } }),
-      this.prisma.blog.count({ where: { status: 'DRAFT', deletedAt: null } }),
-      this.prisma.blog.aggregate({ _sum: { viewCount: true }, where: { deletedAt: null } }),
-      this.prisma.blog.aggregate({ _sum: { commentCount: true }, where: { deletedAt: null } }),
-    ]);
+    const [totalBlogs, publishedBlogs, draftBlogs, totalViews, totalComments] =
+      await Promise.all([
+        this.prisma.blog.count({ where: { deletedAt: null } }),
+        this.prisma.blog.count({
+          where: { status: 'PUBLISHED', deletedAt: null },
+        }),
+        this.prisma.blog.count({ where: { status: 'DRAFT', deletedAt: null } }),
+        this.prisma.blog.aggregate({
+          _sum: { viewCount: true },
+          where: { deletedAt: null },
+        }),
+        this.prisma.blog.aggregate({
+          _sum: { commentCount: true },
+          where: { deletedAt: null },
+        }),
+      ]);
 
     return {
       totalBlogs,

@@ -9,7 +9,8 @@ A comprehensive, production-ready NestJS backend with authentication, authorizat
 - 📧 **Email & Notifications** - Nodemailer, BullMQ queues, WebSocket real-time updates
 - 🗄️ **Database Ready** - Prisma ORM with PostgreSQL, migrations, seeding, soft deletes
 - 👥 **RBAC System** - Role-based and permission-based access control
-- 📊 **Monitoring** - Pino logger, Sentry error tracking, health checks
+- 📊 **Analytics & Tracking** - Google Analytics 4, Facebook Pixel, server-side event tracking
+- 📈 **Monitoring** - Pino logger, Sentry error tracking, health checks
 - 🐳 **DevOps Ready** - Docker, Kubernetes configs, CI/CD workflows
 - 🧪 **Testing Setup** - Jest, E2E tests, code coverage
 - 📚 **Auto-Generated API Docs** - Swagger/OpenAPI integration
@@ -21,6 +22,7 @@ Enterprise-grade [NestJS](https://github.com/nestjs/nest) starter kit with all t
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js >= 20.x
 - pnpm >= 9.x
 - PostgreSQL >= 14.x
@@ -57,6 +59,7 @@ pnpm start:debug
 ```
 
 **Access Points:**
+
 - API: `http://localhost:8000/api`
 - Swagger Docs: `http://localhost:8000/api/docs`
 - Health Check: `http://localhost:8000/api/health`
@@ -104,6 +107,7 @@ kubectl logs -f deployment/nestjs-app
 ## 📚 Documentation
 
 - **Detailed Guide**: See [README.DEV.md](./README.DEV.md) for comprehensive documentation
+- **Analytics Setup**: See [ANALYTICS_SETUP.md](./ANALYTICS_SETUP.md) for tracking configuration
 - **API Documentation**: Available at `/api/docs` when running in development
 - **NestJS Docs**: [https://docs.nestjs.com](https://docs.nestjs.com)
 - **Prisma Docs**: [https://www.prisma.io/docs](https://www.prisma.io/docs)
@@ -112,6 +116,7 @@ kubectl logs -f deployment/nestjs-app
 
 ```
 src/
+├── analytics/         # Analytics & tracking (GA4, Facebook Pixel)
 ├── auth/              # Authentication & authorization
 ├── common/            # Shared utilities, guards, interceptors
 ├── config/            # Environment configuration
@@ -141,17 +146,17 @@ SENTRY_DSN=your-sentry-dsn     # For error tracking
 
 ## 📦 Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `pnpm start:dev` | Start development server with hot reload |
-| `pnpm build` | Build for production |
-| `pnpm start:prod` | Run production build |
-| `pnpm lint` | Lint code with ESLint |
-| `pnpm format` | Format code with Prettier |
-| `pnpm test` | Run unit tests |
-| `pnpm test:e2e` | Run end-to-end tests |
-| `pnpm prisma:studio` | Open Prisma Studio (DB GUI) |
-| `pnpm prisma:migrate` | Run database migrations |
+| Command               | Description                              |
+| --------------------- | ---------------------------------------- |
+| `pnpm start:dev`      | Start development server with hot reload |
+| `pnpm build`          | Build for production                     |
+| `pnpm start:prod`     | Run production build                     |
+| `pnpm lint`           | Lint code with ESLint                    |
+| `pnpm format`         | Format code with Prettier                |
+| `pnpm test`           | Run unit tests                           |
+| `pnpm test:e2e`       | Run end-to-end tests                     |
+| `pnpm prisma:studio`  | Open Prisma Studio (DB GUI)              |
+| `pnpm prisma:migrate` | Run database migrations                  |
 
 ## 🤝 Contributing
 
