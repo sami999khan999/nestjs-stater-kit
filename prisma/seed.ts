@@ -98,11 +98,51 @@ async function main() {
 
     // Blog Management Permissions
     prisma.permission.upsert({
+      where: { name: 'blog.create' },
+      update: {},
+      create: {
+        name: 'blog.create',
+        description: 'Create blog posts',
+      },
+    }),
+    prisma.permission.upsert({
+      where: { name: 'blog.update' },
+      update: {},
+      create: {
+        name: 'blog.update',
+        description: 'Update blog posts',
+      },
+    }),
+    prisma.permission.upsert({
+      where: { name: 'blog.delete' },
+      update: {},
+      create: {
+        name: 'blog.delete',
+        description: 'Delete blog posts',
+      },
+    }),
+    prisma.permission.upsert({
+      where: { name: 'blog.delete.permanent' },
+      update: {},
+      create: {
+        name: 'blog.delete.permanent',
+        description: 'Permanently delete blog posts',
+      },
+    }),
+    prisma.permission.upsert({
+      where: { name: 'admin.blog.view' },
+      update: {},
+      create: {
+        name: 'admin.blog.view',
+        description: 'View blog posts in admin panel',
+      },
+    }),
+    prisma.permission.upsert({
       where: { name: 'blogs:read' },
       update: {},
       create: {
         name: 'blogs:read',
-        description: 'Read blog posts',
+        description: 'Read blog posts (legacy)',
       },
     }),
     prisma.permission.upsert({
@@ -110,7 +150,7 @@ async function main() {
       update: {},
       create: {
         name: 'blogs:write',
-        description: 'Create and update blog posts',
+        description: 'Create and update blog posts (legacy)',
       },
     }),
     prisma.permission.upsert({
@@ -118,7 +158,7 @@ async function main() {
       update: {},
       create: {
         name: 'blogs:delete',
-        description: 'Delete blog posts',
+        description: 'Delete blog posts (legacy)',
       },
     }),
     prisma.permission.upsert({
@@ -249,7 +289,10 @@ async function main() {
     }),
   ]);
 
-  console.log('✅ Permissions created:', permissions.map((p) => p.name).join(', '));
+  console.log(
+    '✅ Permissions created:',
+    permissions.map((p) => p.name).join(', '),
+  );
 
   // Assign permissions to SUPER_ADMIN role (all permissions)
   const superAdminRole = roles.find((r) => r.name === 'SUPER_ADMIN');
@@ -274,14 +317,17 @@ async function main() {
 
   // Assign permissions to ADMIN role (content management permissions)
   const adminRole = roles.find((r) => r.name === 'ADMIN');
-  const adminPermissions = permissions.filter(p => 
-    p.name.startsWith('users:') || 
-    p.name.startsWith('blogs:') || 
-    p.name.startsWith('roles:') || 
-    p.name.startsWith('permissions:') ||
-    p.name.startsWith('dashboard:')
+  const adminPermissions = permissions.filter(
+    (p) =>
+      p.name.startsWith('users:') ||
+      p.name.startsWith('blogs:') ||
+      p.name.startsWith('blog.') ||
+      p.name.startsWith('admin.blog.') ||
+      p.name.startsWith('roles:') ||
+      p.name.startsWith('permissions:') ||
+      p.name.startsWith('dashboard:'),
   );
-  
+
   if (adminRole) {
     for (const permission of adminPermissions) {
       await prisma.rolePermission.upsert({
@@ -405,7 +451,9 @@ async function main() {
   console.log('   User: user@gmail.com / Test@123');
   console.log('\n🔐 Permission Summary:');
   console.log('   Super Admin: All permissions (including system management)');
-  console.log('   Regular Admin: Content management permissions (users, blogs, roles, dashboard)');
+  console.log(
+    '   Regular Admin: Content management permissions (users, blogs, roles, dashboard)',
+  );
   console.log('   User: Basic user permissions');
   console.log('\n⚠️  IMPORTANT: Change these passwords in production!\n');
 }
