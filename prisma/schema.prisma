@@ -49,6 +49,8 @@ model User {
   notifications        Notification[]
   blogs                Blog[]
   auditLogs            AuditLog[]
+  siteSettingsUpdates  SiteSettings[] @relation("SiteSettingsUpdater")
+  seoSettingsUpdates   SEOSettings[]  @relation("SEOSettingsUpdater")
 
   // Indexes
   @@index([email])
@@ -499,4 +501,93 @@ model BlogView {
   @@index([createdAt])
   @@index([ip])
   @@map("blog_views")
+}
+
+// ==================== CMS Settings ====================
+
+model SiteSettings {
+  id String @id @default(cuid())
+  
+  // Basic Information
+  siteName        String  @db.VarChar(255)
+  siteUrl         String  @db.VarChar(500)
+  siteDescription String? @db.Text
+  
+  // Branding
+  logo    String? @db.VarChar(500)
+  favicon String? @db.VarChar(500)
+  
+  // Contact Information
+  contactEmail   String? @db.VarChar(255)
+  contactPhone   String? @db.VarChar(50)
+  contactAddress String? @db.Text
+  
+  // Social Media Links (stored as JSON)
+  socialLinks Json? @default("{}")
+  
+  // Business Information
+  businessHours String? @db.Text
+  timezone      String  @default("UTC") @db.VarChar(100)
+  language      String  @default("en") @db.VarChar(10)
+  currency      String  @default("USD") @db.VarChar(10)
+  
+  // Audit fields
+  updatedAt DateTime  @updatedAt
+  updatedBy String?
+  createdAt DateTime  @default(now())
+  
+  // Relations
+  updater User? @relation("SiteSettingsUpdater", fields: [updatedBy], references: [id], onDelete: SetNull)
+  
+  @@index([updatedAt])
+  @@map("site_settings")
+}
+
+model SEOSettings {
+  id String @id @default(cuid())
+  
+  // Meta Tags
+  metaTitle       String? @db.VarChar(70)
+  metaDescription String? @db.VarChar(160)
+  metaKeywords    String[] // Array of keywords
+  
+  // Open Graph (Facebook)
+  ogTitle       String? @db.VarChar(70)
+  ogDescription String? @db.VarChar(160)
+  ogImage       String? @db.VarChar(500)
+  
+  // Twitter Card
+  twitterCard        String? @default("summary_large_image") @db.VarChar(50)
+  twitterTitle       String? @db.VarChar(70)
+  twitterDescription String? @db.VarChar(160)
+  twitterImage       String? @db.VarChar(500)
+  twitterSite        String? @db.VarChar(100)
+  twitterCreator     String? @db.VarChar(100)
+  
+  // Canonical & Alternate
+  canonicalUrl String? @db.VarChar(500)
+  
+  // Robots Directives (stored as JSON)
+  robotsDirectives Json? @default("{\"index\":true,\"follow\":true,\"noarchive\":false,\"nosnippet\":false,\"noimageindex\":false}")
+  
+  // Structured Data
+  structuredData Json?
+  
+  // Verification & Analytics
+  googleSiteVerification String? @db.VarChar(255)
+  googleAnalyticsId      String? @db.VarChar(100)
+  googleTagManagerId     String? @db.VarChar(100)
+  facebookPixelId        String? @db.VarChar(100)
+  facebookAppId          String? @db.VarChar(100)
+  
+  // Audit fields
+  updatedAt DateTime  @updatedAt
+  updatedBy String?
+  createdAt DateTime  @default(now())
+  
+  // Relations
+  updater User? @relation("SEOSettingsUpdater", fields: [updatedBy], references: [id], onDelete: SetNull)
+  
+  @@index([updatedAt])
+  @@map("seo_settings")
 }

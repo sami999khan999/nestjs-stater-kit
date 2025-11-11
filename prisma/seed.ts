@@ -246,6 +246,44 @@ async function main() {
       },
     }),
 
+    // CMS Settings Permissions
+    prisma.permission.upsert({
+      where: { name: 'admin.settings.view' },
+      update: {},
+      create: {
+        name: 'admin.settings.view',
+        description: 'View CMS settings (site settings and SEO settings)',
+      },
+    }),
+    prisma.permission.upsert({
+      where: { name: 'admin.settings.update' },
+      update: {},
+      create: {
+        name: 'admin.settings.update',
+        description: 'Update CMS settings (site settings and SEO settings)',
+      },
+    }),
+
+    // SEO Management Permissions
+    prisma.permission.upsert({
+      where: { name: 'admin.seo.view' },
+      update: {},
+      create: {
+        name: 'admin.seo.view',
+        description: 'View SEO analytics and recommendations',
+      },
+    }),
+
+    // Dashboard CMS Permissions
+    prisma.permission.upsert({
+      where: { name: 'admin.dashboard.view' },
+      update: {},
+      create: {
+        name: 'admin.dashboard.view',
+        description: 'View CMS dashboard statistics',
+      },
+    }),
+
     // System Management Permissions (SUPER_ADMIN only)
     prisma.permission.upsert({
       where: { name: 'system:health' },
@@ -323,6 +361,9 @@ async function main() {
       p.name.startsWith('blogs:') ||
       p.name.startsWith('blog.') ||
       p.name.startsWith('admin.blog.') ||
+      p.name.startsWith('admin.settings.') ||
+      p.name.startsWith('admin.seo.') ||
+      p.name.startsWith('admin.dashboard.') ||
       p.name.startsWith('roles:') ||
       p.name.startsWith('permissions:') ||
       p.name.startsWith('dashboard:'),
@@ -452,7 +493,7 @@ async function main() {
   console.log('\n🔐 Permission Summary:');
   console.log('   Super Admin: All permissions (including system management)');
   console.log(
-    '   Regular Admin: Content management permissions (users, blogs, roles, dashboard)',
+    '   Regular Admin: Content management permissions (users, blogs, roles, dashboard, CMS settings)',
   );
   console.log('   User: Basic user permissions');
   console.log('\n⚠️  IMPORTANT: Change these passwords in production!\n');

@@ -1,6 +1,9 @@
 import {
   Controller,
   Get,
+  Put,
+  Post,
+  Body,
   Param,
   Query,
   Res,
@@ -8,14 +11,23 @@ import {
   HttpCode,
   HttpStatus,
   Header,
+  Request,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { Permissions } from 'src/common/decorators/permissions.decorator';
 import { PermissionsGuard } from 'src/common/guards/permissions.guard';
 import { SeoService } from './services/seo.service';
 import { DashboardService } from './services/dashboard.service';
 import { SitemapService } from './services/sitemap.service';
+import { SettingsService } from './services/settings.service';
+import { UploadService } from 'src/upload/upload.service';
+import { UpdateSiteSettingsDto } from './dto/site-settings.dto';
+import { UpdateSEOSettingsDto } from './dto/seo-settings.dto';
 import {
   AnalyticsQueryDto,
   analyticsQuerySchema,
@@ -23,13 +35,16 @@ import {
   trafficSourcesQuerySchema,
 } from './dto/analytics.dto';
 import { NotAcceptableException } from '@nestjs/common';
+import { AuthenticateRequest } from 'src/auth/types/types';
 
-@Controller('cms')
+@Controller('admin/cms')
 export class CmsController {
   constructor(
     private readonly seoService: SeoService,
     private readonly dashboardService: DashboardService,
     private readonly sitemapService: SitemapService,
+    private readonly settingsService: SettingsService,
+    private readonly uploadService: UploadService,
   ) {}
 
   // ==================== Dashboard Endpoints ====================
@@ -125,6 +140,76 @@ export class CmsController {
   @Get('seo/recommendations')
   async getSEORecommendations(@Query('type') type?: 'blog' | 'category') {
     return this.seoService.getSEORecommendations(type || 'blog');
+  }
+
+  // ==================== Settings Endpoints ====================
+
+  /**
+   * Get site settings
+   */
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  @Permissions('admin.settings.view')
+  @Get('site-settings')
+  async getSiteSettings() {
+    const settings = await this.settingsService.getSiteSettings();
+    return {
+      status: true,
+      data: settings,
+      message: 'Site settings retrieved successfully',
+    };
+  }
+
+  /**
+   * Update site settings
+   */
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  @Permissions('admin.settings.update')
+  @Put('site-settings')
+  async updateSiteSettings(
+    @Body() dto: UpdateSiteSettingsDto,
+    @Request() req: any,
+  ) {
+    const userId = req.user?.userId || req.user?.id;
+    const settings = await this.settingsService.updateSiteSettings(dto, userId);
+    return {
+      status: true,
+      data: settings,
+      message: 'Site settings updated successfully',
+    };
+  }
+
+  /**
+   * Get SEO settings
+   */
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  @Permissions('admin.settings.view')
+  @Get('seo-settings')
+  async getSEOSettings() {
+    const settings = await this.settingsService.getSEOSettings();
+    return {
+      status: true,
+      data: settings,
+      message: 'SEO settings retrieved successfully',
+    };
+  }
+
+  /**
+   * Update SEO settings
+   */
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  @Permissions('admin.settings.update')
+  @Put('seo-settings')
+  async updateSEOSettings(
+    @Body() dto: UpdateSEOSettingsDto,
+    @Request() req: any,
+  ) {
+    const userId = req.user?.userId || req.user?.id;
+    const settings = await this.settingsService.updateSEOSettings(dto, userId);
+    return {
+      status: true,
+      data: settings,
+      message: 'SEO settings updated successfully',
+    };
   }
 
   // ==================== Sitemap Endpoints ====================
