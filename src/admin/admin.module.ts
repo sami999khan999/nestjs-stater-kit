@@ -1,7 +1,13 @@
+import { AdminCmsHeroController } from './controllers/admin-cms-hero.controller';
+import { AdminCmsBannerController } from './controllers/admin-cms-banner.controller';
+import { AdminCmsSettingsController } from './controllers/admin-cms-settings.controller';
+import { AdminCmsTestimonialController } from './controllers/admin-cms-testimonial.controller';
 import { Module } from '@nestjs/common';
 
 import { PrismaModule } from '../prisma/prisma.module';
 import { CommonModule } from '../common/common.module';
+import { CmsModule } from 'src/cms/cms.module';
+import { UploadModule } from 'src/upload/upload.module';
 import { AdminController } from './admin.controller';
 import { AdminUsersController } from './controllers/admin-users.controller';
 import { AdminBlogsController } from './controllers/admin-blogs.controller';
@@ -16,7 +22,7 @@ import { AdminDashboardService } from './services/admin-dashboard.service';
 import { AdminSystemService } from './services/admin-system.service';
 
 @Module({
-  imports: [PrismaModule, CommonModule],
+  imports: [PrismaModule, CommonModule, CmsModule, UploadModule],
   controllers: [
     AdminController,
     AdminUsersController,
@@ -24,6 +30,10 @@ import { AdminSystemService } from './services/admin-system.service';
     AdminRolesController,
     AdminDashboardController,
     AdminSystemController,
+    AdminCmsHeroController,
+    AdminCmsBannerController,
+    AdminCmsSettingsController,
+    AdminCmsTestimonialController,
   ],
   providers: [
     AdminService,
