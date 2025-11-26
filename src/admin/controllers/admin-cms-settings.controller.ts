@@ -249,7 +249,8 @@ export class AdminCmsSettingsController {
       file,
       'cms/testimonials',
     );
-    const fileUrl = result.Location || `${process.env.APP_URL}/${result.Key}`;
+    const fileUrl =
+      result.Location || `${process.env.FRONTEND_URL}/${result.Key}`;
     return {
       status: true,
       data: { url: fileUrl, key: result.Key },
@@ -273,7 +274,8 @@ export class AdminCmsSettingsController {
     file: Express.Multer.File,
   ) {
     const result = await this.uploadService.uploadFile(file, 'cms/content');
-    const fileUrl = result.Location || `${process.env.APP_URL}/${result.Key}`;
+    const fileUrl =
+      result.Location || `${process.env.FRONTEND_URL}/${result.Key}`;
     return {
       status: true,
       data: { url: fileUrl, key: result.Key },
